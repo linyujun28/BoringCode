@@ -12,3 +12,10 @@ int main(){
 	printf("win!\n");
 	return 0;
 }
+/*
+
+output:
+
+win!
+
+*/
