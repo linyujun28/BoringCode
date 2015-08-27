@@ -1,0 +1,2 @@
+# BoringCode
+The boring codes.
