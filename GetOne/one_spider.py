@@ -20,6 +20,9 @@ homedir = os.getcwd()
 print "now you are at "+homedir
 
 print_lock = thread.allocate_lock()
+list_lock = thread.allocate_lock()
+threadsize = 100
+oldlistcheck = 5
 leftlist = []
 
 def saveImage(filename,addr):
@@ -125,25 +128,63 @@ def getdetail(pageindex):
     print_lock.acquire()
     print "get:"+str(pageindex)
     #print pageindex,leftlist
-    leftlist.remove(pageindex)
     print_lock.release()
+    list_lock.acquire()
+    leftlist.remove(pageindex)
+    list_lock.release()
     thread.exit()
     
 def getone(st,en):
-    tlist=[]
+    ret=getlist(range(st,en+1))
+    times=1
+    while(len(ret)!=0):
+        print "fixbug %d times" % times
+        times=times+1
+        ret=getlist(ret)
+
+def getlist(rlist):#fixbug
     global leftlist
-    leftlist=range(st,en+1)
-    for i in range(st,en+1):
-        tlist.append(thread.start_new_thread(getdetail,(i,)))
+    leftlist = []
+    listold=[[] for x in range(oldlistcheck)]
+    #print "listold",listold
+    for i in rlist:
+        while True:
+            list_lock.acquire()
+            if len(leftlist)<threadsize :
+                thread.start_new_thread(getdetail,(i,))
+                leftlist.append(i)
+                list_lock.release()
+                break
+            else:
+                list_lock.release()
+                time.sleep(1)
         #thread i
         #getdetail(i)
+    #wait
     while(1):
+        list_lock.acquire()
         if len(leftlist)==0:
             print "finish!"
-            exit()
+            list_lock.release()
+            return []
+        print leftlist
+        for j in range(oldlistcheck-1):
+            listold[j]=listold[j+1]#move instead of copy
+        listold[oldlistcheck-1]=leftlist[:]
+        allequal=True
+        for j in range(oldlistcheck-1):
+            if cmp(listold[j],listold[j+1])!=0:
+                allequal=False
+                listold[oldlistcheck-1]
+                break
+        if allequal:
+            list_lock.release()
+            return leftlist
+        list_lock.release()
         time.sleep(3)
-    
+
 sten=raw_input("please input two interger(start to end):").split()
 st=int(sten[0])
 en=int(sten[1])
 getone(st,en)
+exit()
