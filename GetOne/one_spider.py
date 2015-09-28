@@ -39,23 +39,6 @@ def handle_response(resultdata):
     #print ret.decode("utf-8")
     return ret
 
-def get_list(itemlist):
-    for item in itemlist:
-        print item[0].encode('utf-8')
-        req = urllib2.Request(url = item[1])
-        result = urllib2.urlopen(req)
-        data = handle_response(result)
-        soup = BeautifulSoup(data,'lxml')
-        #print soup.prettify()
-        infolist = soup.find_all(class_="fanhao_list_table")[0].find_all("tr")
-        for eachinfo in infolist:
-            #print eachinfo
-            eachdetail = eachinfo.find_all(["td","th"])
-            #print eachdetail
-            for i in range(0,5):
-                print eachdetail[i].text.encode('utf-8')+" ",
-            print ""
-
 def getdetail(pageindex):
     global leftlist
     host="http://wufazhuce.com"
@@ -65,23 +48,10 @@ def getdetail(pageindex):
     #opener = urllib2.build_opener(httpHandler, httpsHandler)
     #urllib2.install_opener(opener)
     myUrl = host+"/one/vol."+str(pageindex)
-    headers = {
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2504.0 Safari/537.36',
-        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Encoding':'gzip, deflate, sdch',
-        'Accept-Language':'zh-CN,zh;q=0.8',
-        'Cache-Control':'max-age=0',
-        'Connection':'keep-alive',
-        'Content-Length':'29',
-        'Content-Type':'application/x-www-form-urlencoded',
-        'Host': 'wufazhuce.com',
-        'Referer':'http://wufazhuce.com/',
-        'Upgrade-Insecure-Requests':'1'
-    }
     req = urllib2.Request(myUrl)
     result = urllib2.urlopen(req)
     data = handle_response(result)
-    soup = BeautifulSoup(data,'lxml')
+    soup = BeautifulSoup(data)#soup = BeautifulSoup(data,'lxml')
     #print soup.prettify()
     
     # #tab-imagen
