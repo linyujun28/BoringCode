@@ -33,7 +33,7 @@ import urllib2
 import urllib
 import cookielib
 from bs4 import BeautifulSoup
-import chardet
+#import chardet
 import getpass
 
 #father dir source url
@@ -136,6 +136,8 @@ class sjtuelearning:
         # soup = BeautifulSoup(data)
 
         xuanketr=soup.find_all(class_="tablebordercolor")[0].tr
+        # 如果上面 报错使用下面这句代替
+        #xuanketr=soup.find_all(attrs={"class","tablebordercolor"})[0].tr
         datatr=xuanketr.find_next_siblings("tr")
         trlen=len(datatr)
         items=[]
@@ -155,6 +157,8 @@ class sjtuelearning:
         # 如果报错lxml 用下面这句替代即可
         # soup = BeautifulSoup(data)
         xuanketr=soup.find_all(class_="tablebordercolor")[0].tr
+        # 如果上面 报错使用下面这句代替
+        #xuanketr=soup.find_all(attrs={"class","tablebordercolor"})[0].tr
         datatr=xuanketr.find_next_siblings("tr")
         trlen=len(datatr)
         items=[]
