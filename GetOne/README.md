@@ -2,6 +2,10 @@
 
 ---
 
+## !!!!!!
+### 因为 ONE 的主页改过了 所以下面的 都不能用了 _(:з」∠)_  不过 我新写了 一个 getonefunction 函数 
+### getoneError.py 还不能用 _(:з」∠)_【序号不对应 就没写完整的程序】
+
 ##What is this?
 
 *Some code crawl data from wufazhuce.com*
