@@ -1,0 +1,89 @@
+# 这个函数 用来获取 pageindex 对应的 url 对应的内容
+# 因为 这个ONE 蛋疼的程序员 的序号对应问题  暂时停止下载图片，问题和文章
+# 2016年2月14日18:48:00
+
+#处理 序号为pageindex的页面
+def getdetail(pageindex):
+    global leftlist
+    global isdebug
+    host="http://wufazhuce.com"
+    if isdebug:
+        #访问信息
+        httpHandler = urllib2.HTTPHandler(debuglevel=1)
+        httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
+        opener = urllib2.build_opener(httpHandler, httpsHandler)
+        urllib2.install_opener(opener)
+
+    #################图片#################
+    # /one/1200
+    myUrl = host+"/one/"+str(pageindex)
+    result = urllib2.urlopen(urllib2.Request(myUrl))
+    data = handle_response(result)
+    soup = BeautifulSoup(data,'lxml')#soup = BeautifulSoup(data)
+    #print soup.prettify()
+
+    # 图片路径    
+    ## $('.one-imagen img').attr('src')
+    contentdiv=soup.find(attrs={"class","one-imagen"})
+    picurl = contentdiv.img["src"]
+    print picurl
+    
+    # 图片名和作者
+    ## $('.one-imagen-leyenda').text()
+    contentdiv=soup.find(attrs={"class","one-imagen-leyenda"})
+    picnameauthor = handle_text(contentdiv.text)
+    #print picnameauthor
+
+    #每日一句
+    ## $('.one-cita').text()
+    contentdiv=soup.find(attrs={"class","one-cita"})
+    cita=handle_text(contentdiv.text)
+    #print cita
+
+    #################文章#################
+    # /article/1200
+    myUrl = host+"/article/"+str(pageindex)
+    result = urllib2.urlopen(urllib2.Request(myUrl))
+    data = handle_response(result)
+    soup = BeautifulSoup(data,'lxml')#soup = BeautifulSoup(data)
+    #print soup.prettify()
+
+    # 引言
+    ## $('.comilla-cerrar').text()
+    contentdiv=soup.find(attrs={"class","comilla-cerrar"})
+    comilla_cerrar = handle_text(contentdiv.text)
+    #print comilla_cerrar
+
+    # 标题
+    ## $('.articulo-titulo').text()
+    contentdiv=soup.find(attrs={"class","articulo-titulo"})
+    titulo = handle_text(contentdiv.text)
+    #print titulo
+    
+    # 作者
+    ## $('.articulo-autor').text()
+    contentdiv=soup.find(attrs={"class","articulo-autor"})
+    autor = handle_text(contentdiv.text)
+    #print autor
+    
+    # 内容
+    ## $('.articulo-contenido').text()
+    contentdiv=soup.find(attrs={"class","articulo-contenido"})
+    contenido = handle_text(contentdiv.text)
+    #print contenido
+    
+    
+    #################问题#################
+    # /question/1200
+    myUrl = host+"/question/"+str(pageindex)
+    result = urllib2.urlopen(urllib2.Request(myUrl))
+    data = handle_response(result)
+    soup = BeautifulSoup(data,'lxml')#soup = BeautifulSoup(data)
+    print soup.prettify()
+    
+    # 问题 和 回答 全部
+    ## $('.one-cuestion').text()
+    contentdiv=soup.find(attrs={"class","one-cuestion"})
+    contentdiv.find(attrs={'class','cuestion-compartir'}).clear();
+    question_qa = handle_text(contentdiv.text)
+    print question_qa
